@@ -32,3 +32,13 @@ class HashTable:
             current = current.next
         return None, num_tests
     
+    def get(self, key):         # eh o query sem stats
+        value, _ = self.query(key)
+        return value
+
+    def items(self):
+        for head in self.buckets:
+            current = head
+            while current is not None:
+                yield current.key, current.value
+                current = current.next

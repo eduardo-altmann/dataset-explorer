@@ -12,3 +12,13 @@ def load_movies(csv_path: str, table_size: int = 100_000) -> MoviesTable:
 
         movies.add_movie(movieId, title, genres, year)
     return movies
+
+def load_ratings(csv_path: str, movies: MoviesTable) -> None:
+    df = pd.read_csv(csv_path)
+    for row in df.itertuples(index=False):
+        movieId = int(row.movieId)
+        rating = float(row.rating)
+
+        movies.add_rating(movieId, rating)
+
+    movies.finalize_ratings()

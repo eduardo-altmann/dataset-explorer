@@ -94,3 +94,25 @@ def query_tags(movies_table, tags_table, tag1, tag2):
     )
 
     return filmes
+
+def query_prefix(movies_table, trie, prefix):
+    movieIds = trie.movie_ids_with_prefix(prefix)
+    resultados = []
+
+    for mid in movieIds:
+        movie = movies_table.table.get(mid)
+        if movie is not None and movie.rating_count > 0:
+            resultados.append(movie)
+
+    if not resultados:
+        return []
+
+    quicksort_random_hoare(
+        resultados,
+        0,
+        len(resultados) - 1,
+        key=lambda m: m.rating_avg,
+        reverse=True
+    )
+
+    return resultados

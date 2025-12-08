@@ -1,7 +1,7 @@
 # main.py
 from loader import load_movies, load_ratings, load_tags
 from user_structs import UserRatingsTable
-from queries import query_top, query_user, query_tags
+from queries import query_top, query_user, query_tags, query_prefix
 from tags_structs import TagsTable
 
 def parse_tags_command(line):
@@ -16,7 +16,7 @@ def parse_tags_command(line):
 
 def main():
     print("Carregando dados...")
-    movies = load_movies("movies.csv")
+    movies, trie = load_movies("movies.csv")
     users = UserRatingsTable(300_000)
     tags = TagsTable(200_000)
     load_ratings("miniratings.csv", movies, users)
@@ -93,6 +93,21 @@ def main():
 
             for m in resultados:
                 print(f"{m.movieId}\t{m.title}\t{m.genres}\t{m.rating_avg:.4f}\t{m.rating_count}")
+        
+        elif cmd == "prefix":
+            if len(parts) < 2:
+                print("Uso: prefix <texto>")
+                continue
+
+            prefix_text = " ".join(parts[1:])
+            resultados = query_prefix(movies, trie, prefix_text)
+            if not resultados:
+                print("Nenhum filme encontrado para esse prefixo.")
+                continue
+
+            for m in resultados:
+                print(f"{m.movieId}\t{m.title}\t{m.genres}\t"
+                      f"{m.rating_avg:.4f}\t{m.rating_count}")
 
         else:
             print("Comando inválido.")

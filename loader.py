@@ -1,6 +1,7 @@
 import pandas as pd
 from movie_structs import MoviesTable
 from user_structs import UserRatingsTable
+from tags_structs import TagsTable
 
 def load_movies(csv_path: str, table_size: int = 100_000) -> MoviesTable:
     movies = MoviesTable(table_size)
@@ -26,3 +27,10 @@ def load_ratings(csv_path: str, movies: MoviesTable, users: UserRatingsTable) ->
         users.add_rating(userId, movieId, rating)
 
     movies.finalize_ratings()
+
+def load_tags(csv_path: str, tags_table: TagsTable) -> None:
+    df = pd.read_csv(csv_path)
+    for row in df.itertuples(index=False):
+        movieId = int(row.movieId)
+        tag = str(row.tag)
+        tags_table.add(tag, movieId)

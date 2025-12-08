@@ -1,13 +1,26 @@
 # main.py
-from loader import load_movies, load_ratings
+from loader import load_movies, load_ratings, load_tags
 from user_structs import UserRatingsTable
-from queries import query_top, query_user
+from queries import query_top, query_user, query_tags
+from tags_structs import TagsTable
+
+def parse_tags_command(line):
+    partes = line.split('"')
+    if len(partes) < 5:
+        return None, None
+
+    tag1 = partes[1]
+    tag2 = partes[3]
+    return tag1, tag2
+
 
 def main():
     print("Carregando dados...")
     movies = load_movies("movies.csv")
     users = UserRatingsTable(300_000)
+    tags = TagsTable(200_000)
     load_ratings("miniratings.csv", movies, users)
+    load_tags("tags.csv", tags)
     print("Pronto! Digite comandos. Ex: top 10 Comedy  | quit para sair.")
 
     while True:
@@ -65,6 +78,22 @@ def main():
                 print(f"{m.movieId}\t{m.title}\t{m.genres}\t"
                       f"userRating={ur:.1f}\tglobalAvg={m.rating_avg:.4f}\tcount={m.rating_count}")
                 
+        elif cmd == "tags":
+            tag1, tag2 = parse_tags_command(line)
+
+            if tag1 is None or tag2 is None:
+                print('Uso: tags "tag 1" "tag 2"')
+                continue
+
+            resultados = query_tags(movies, tags, tag1, tag2)
+
+            if not resultados:
+                print("Nenhum filme encontrado.")
+                continue
+
+            for m in resultados:
+                print(f"{m.movieId}\t{m.title}\t{m.genres}\t{m.rating_avg:.4f}\t{m.rating_count}")
+
         else:
             print("Comando inválido.")
         

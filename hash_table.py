@@ -10,7 +10,16 @@ class HashTable:
         self.buckets = [None] * size
 
     def _hash(self, key: int) -> int:
-        return key % self.M             # função privada que faz o hash mod m
+        # caso 1: chave inteira (movieId, userId)
+        if isinstance(key, int):
+            return key % self.M
+
+        # caso 2: chave string (tags)
+        if isinstance(key, str):
+            h = 0
+            for ch in key:
+                h = (h * 31 + ord(ch)) % self.M
+            return h
 
     def insert(self, key, value):
         index = self._hash(key)

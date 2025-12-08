@@ -51,3 +51,46 @@ def query_user(movies_table, users_table, userId):
     # limita a 20
     return resultados[:20]
 
+def query_tags(movies_table, tags_table, tag1, tag2):
+    lista1 = tags_table.get_movies(tag1)
+    lista2 = tags_table.get_movies(tag2)
+
+    if not lista1 or not lista2:
+        return []
+    
+
+    seen = set()
+    for m in lista1:
+        seen.add(m)
+
+    intersecao = []
+    ja_colocado = set()
+
+    for m in lista2:
+        if m in seen and m not in ja_colocado:
+            intersecao.append(m)
+            ja_colocado.add(m)
+
+        
+    if not intersecao:
+        return []
+    
+    filmes = []
+    
+    for movieId in intersecao:
+        movie = movies_table.table.get(movieId)
+        if movie is not None and movie.rating_count > 0:
+            filmes.append(movie)
+    
+    if not filmes:
+        return []
+    
+    quicksort_random_hoare(
+        filmes,
+        0,
+        len(filmes) - 1,
+        key=lambda m: m.rating_avg,
+        reverse=True
+    )
+
+    return filmes

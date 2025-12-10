@@ -7,7 +7,7 @@ def query_top(movies_table, N, genero):
         if movie is None:
             continue
 
-        if genero in movie.genres and movie.rating_count >= 10:         # ver depois esse numero minimo de avaliacoes
+        if genero in movie.genres and movie.rating_count >= 1000:         # ver depois esse numero minimo de avaliacoes
             candidatos.append(movie)
         
     if len(candidatos) == 0:

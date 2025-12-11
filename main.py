@@ -53,9 +53,8 @@ def main():
         parts = line.split()
         cmd = parts[0]
 
-        # -------------------------------------------------
-        # COMANDO: top N genero
-        # -------------------------------------------------
+        # top N genero
+        
         if cmd == "top":
             if len(parts) < 3:
                 print("Uso: top N genero")
@@ -75,7 +74,7 @@ def main():
                 print("Nenhum filme encontrado para esse gênero.")
                 continue
 
-            # movieId, title, genres, global_avg(6 casas), rating_count
+            # movieId, title, genres, global_avg, rating_count
             for m in resultados:
                 print(
                     f"{m.movieId}\t"
@@ -85,9 +84,8 @@ def main():
                     f"{m.rating_count}"
                 )
 
-        # -------------------------------------------------
-        # COMANDO: user userId
-        # -------------------------------------------------
+        # user userId
+
         elif cmd == "user":
             if len(parts) < 2:
                 print("Uso: user userId")
@@ -105,7 +103,7 @@ def main():
                 print("Nenhuma avaliação encontrada para esse usuário.")
                 continue
 
-            # movieId, title, genres, global_avg(6 casas), rating_count, user_rating
+            # movieId, title, genres, global_avg, rating_count, user_rating
             for item in resultados:
                 m = item["movie"]
                 ur = item["userRating"]
@@ -119,9 +117,7 @@ def main():
                     f"{ur:.1f}"
                 )
 
-        # -------------------------------------------------
-        # COMANDO: tags "tag 1" "tag 2"
-        # -------------------------------------------------
+        # tags "tag 1" "tag 2"
         elif cmd == "tags":
             tag1, tag2 = parse_tags_command(line)
 
@@ -135,7 +131,7 @@ def main():
                 print("Nenhum filme encontrado com ambas as tags.")
                 continue
 
-            # movieId, title, genres, global_avg(6 casas), rating_count
+            # movieId, title, genres, global_avg, rating_count
             for m in resultados:
                 print(
                     f"{m.movieId}\t"
@@ -145,15 +141,13 @@ def main():
                     f"{m.rating_count}"
                 )
 
-        # -------------------------------------------------
-        # COMANDO: prefix <texto>
-        # -------------------------------------------------
+        # prefix <texto>
         elif cmd == "prefix":
             if len(parts) < 2:
                 print("Uso: prefix <texto>")
                 continue
 
-            # tudo depois de 'prefix' é o prefixo
+            # tudo depois de prefix eh o prefixo
             prefix_text = " ".join(parts[1:])
 
             resultados = query_prefix(movies, trie, prefix_text)
@@ -162,7 +156,7 @@ def main():
                 print("Nenhum filme encontrado para esse prefixo.")
                 continue
 
-            # movieId, title, genres, global_avg(6 casas), rating_count
+            # movieId, title, genres, global_avg, rating_count
             for m in resultados:
                 print(
                     f"{m.movieId}\t"
